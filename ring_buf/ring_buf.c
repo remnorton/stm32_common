@@ -28,10 +28,13 @@ int16_t	ring_seek(uint16_t head, uint16_t tail, uint8_t sym, uint8_t* data, uint
 		tail = ring_add(tail, 1, size);
 		result = (data[tail] == sym)?tail:-1;
 	}
+	if (result < 0)
+		result = tail;
+
 	return result;
 }
 
-void ring_extract(uint8_t* dest, uint8_t* src, uint16_t tail, uint8_t length, uint16_t size)
+void ring_extract(uint8_t* dest, uint8_t* src, uint16_t tail, uint16_t length, uint16_t size)
 {
 	for (int i = 0; i < length; i++)
 	{

@@ -18,10 +18,12 @@ typedef struct
 	uint32_t	max_adc_value;
 	uint16_t	r1;
 	uint16_t	r2;
+	uint8_t		filter_rate;
 }VMETER_Int_t;
 
 
 void vmeter_init(VMETER_Int_t* init);
+void vmeter_calib(uint16_t voltage);
 void vmeter_step();
 
 #endif /* APP_DEVICE_VOLTMETER_H_ */
