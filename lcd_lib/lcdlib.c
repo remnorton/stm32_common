@@ -277,9 +277,9 @@ void dspFillRectangle(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
     if (!active_handle) return;
     if (!dsp[active_handle-1].init) return;
     if (dsp[active_handle-1].init->driver->fillRectangle) dsp[active_handle-1].init->driver->fillRectangle(dsp[active_handle-1].init->drvSettings,x,y,width,height,dsp[active_handle-1].foreColor);
-    /*else
+    else
         for (uint16_t ly = y; ly <=(y+ height); ly++)
-            dspDrawLine(x,ly,x+width,ly);*/
+            dspDrawLine(x,ly,x+width,ly);
 }
 
 uint16_t dspDrawChar(uint32_t x, uint32_t y, Font_type_t* font, uint8_t sym, uint8_t direction)
@@ -318,7 +318,7 @@ uint16_t dspDrawChar(uint32_t x, uint32_t y, Font_type_t* font, uint8_t sym, uin
 		DSP_Bitmap_t bmp;
 		bmp.height = sym_height;
 		bmp.width = sym_width;
-		bmp.data = font->bitmaps+offset;
+		bmp.data = ((uint8_t*)font->bitmaps)+offset;
 		dspDrawBitmap(x+startX,y+startY,&bmp,direction);
     }
     return sym_width+font->spacing;
@@ -333,7 +333,8 @@ void dspDrawString(uint32_t x, uint32_t y, Font_type_t* font, uint8_t* text, uin
     uint8_t vertical = (direction%2)?1:0;
     uint8_t forward = ((direction == DSP_TextDir_TopBottom) || (direction == DSP_TextDir_RightLeft))?0:1;
     uint32_t pix_len = calc_pix_len(font, text, ch_len);
-    uint32_t sx, sy;
+    uint32_t sx = 0;
+    uint32_t sy = 0;
 
     while (pix_len > (vertical?dspGetScreenHeight(active_handle):dspGetScreenWidth(active_handle)))
     {
